@@ -2,7 +2,8 @@
 
 namespace App\Const;
 
-class Auth
+class AuthCode
 {
-
+    const LOGIN_FAIL = 403;
+    const LOGIN_SUCCESS = 200;
 }
