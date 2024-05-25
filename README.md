@@ -6,13 +6,20 @@ Mysql
 
 ##### Install
 
-```
+```shell
 composer install
+```
+##### Migrate DB
+```shell
 php artisan migrate
+```
+##### Run Seeder
+```shell
 php artisan db:seed
-
 ```
 
-##### Run
+##### Serve
 
-`php artisan serve`
+```shell
+php artisan serve
+```
