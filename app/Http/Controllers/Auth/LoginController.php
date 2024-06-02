@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Const\AuthCode;
 use App\Http\Controllers\Controller;
+use App\Http\Response\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,17 +18,11 @@ class LoginController extends Controller
             $user = $request->user();
             $token = $user->createToken('loginToken')->plainTextToken;
 
-            return response()->json([
-                'status' => AuthCode::LOGIN_SUCCESS,
-                'message' => __('auth.login_success'),
-                'data' => compact(['token', 'user'])
-            ]);
+            return Response::successResponse(compact(['token', 'user']), 'auth.login_success');
         }
 
-        return response()->json([
-            'status' => AuthCode::LOGIN_FAIL,
-            'message' => __('auth.login_fail'),
-            'data' => []
-        ]);
+        return Response::unauthorizedResponse(
+            message: 'auth.login_fail'
+        );
     }
 }
