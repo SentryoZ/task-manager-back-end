@@ -12,6 +12,7 @@ class Response
     const SUCCESS = 200;
     const UNAUTHORIZED = 401;
     const NOT_FOUND = 404;
+    const SERVER_ERROR = 500;
 
     /**
      * @param array|Model|ResourceCollection $data
@@ -36,9 +37,8 @@ class Response
         return response()->json([
             'message' => __($message),
             'debug_message' => $debugMessage,
-            'code' => $statusCode,
             'data' => $data
-        ]);
+        ], $statusCode);
     }
 
     public static function successResponse(
@@ -66,6 +66,16 @@ class Response
         $message = "",
         $debugMessage = "",
         $statusCode = self::UNAUTHORIZED
+    ): JsonResponse
+    {
+        return self::response($data, $message, $debugMessage, $statusCode);
+    }
+
+    public static function serverErrorResponse(
+        $data = [],
+        $message = "",
+        $debugMessage = "",
+        $statusCode = self::SERVER_ERROR
     ): JsonResponse
     {
         return self::response($data, $message, $debugMessage, $statusCode);
