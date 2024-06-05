@@ -17,7 +17,12 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
-        return Response::successResponse(ProjectResource::collection(Project::all()));
+        return Response::successResponse(
+            ProjectResource::collection(Project::all()),
+            __('crud.read', [
+                'item' => __('project.item')
+            ])
+        );
     }
 
     public function store(ProjectRequest $request)
@@ -25,25 +30,48 @@ class ProjectController extends Controller
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
 
-        return Response::successResponse(new ProjectResource(Project::create($data)));
+        return Response::successResponse(new ProjectResource(Project::create($data)),
+            __('crud.create', [
+                'item' => __('project.item')
+            ]));
     }
 
     public function show(Project $project)
     {
-        return Response::successResponse(new ProjectResource($project));
+        return Response::successResponse(
+            new ProjectResource($project),
+            __('crud.read', [
+                'item' => __('project.item_with_name', [
+                    'name' => $project->name
+                ])
+            ])
+        );
     }
 
     public function update(ProjectRequest $request, Project $project)
     {
         $project->update($request->validated());
 
-        return new ProjectResource($project);
+        return Response::successResponse(
+            new ProjectResource($project),
+            __('crud.update', [
+                'item' => __('project.item_with_name', [
+                    'name' => $project->name
+                ])
+            ])
+        );
     }
 
     public function destroy(Project $project)
     {
         $project->delete();
 
-        return response()->json();
+        return Response::successResponse(
+            message: __('crud.delete', [
+                'item' => __('project.item_with_name', [
+                    'name' => $project->name
+                ])
+            ])
+        );
     }
 }

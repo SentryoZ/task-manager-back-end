@@ -18,9 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (NotFoundHttpException $exception) {
-            return Response::notFoundResponse(debugMessage: $exception->getMessage());
+            return Response::notFoundResponse(message: "Not Found", debugMessage: $exception->getMessage());
         });
         $exceptions->render(function (Exception $exception) {
-            return Response::serverErrorResponse(debugMessage: $exception->getMessage());
+            return Response::serverErrorResponse(message: "Server Error", debugMessage: $exception->getMessage());
         });
     })->create();

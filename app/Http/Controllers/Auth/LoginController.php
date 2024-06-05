@@ -22,7 +22,7 @@ class LoginController extends Controller
         }
 
         return Response::unauthorizedResponse(
-            message: 'auth.login_fail'
+            message: __('auth.password')
         );
     }
 }
