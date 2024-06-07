@@ -23,7 +23,12 @@ class Response
         $statusCode = self::SUCCESS
     ): JsonResponse
     {
-        return self::response($data, $message, $debugMessage, $statusCode);
+        return self::response(
+            data: $data,
+            message: $message,
+            debugMessage: $debugMessage,
+            statusCode: $statusCode
+        );
     }
 
     /**
