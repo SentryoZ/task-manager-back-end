@@ -23,12 +23,17 @@ class Response
         $statusCode = self::SUCCESS
     ): JsonResponse
     {
-        return self::response($data, $message, $debugMessage, $statusCode);
+        return self::response(
+            data: $data,
+            message: $message,
+            debugMessage: $debugMessage,
+            statusCode: $statusCode
+        );
     }
 
     /**
      * @param array|Model|ResourceCollection $data
-     * @param array|null $errors
+     * @param array|string|null $errors
      * @param string $message
      * @param string $debugMessage
      * @param int $statusCode
@@ -36,7 +41,7 @@ class Response
      */
     public static function response(
         Model|JsonResource|array $data = [],
-        ?array                   $errors = null,
+        array|string|null        $errors = null,
         string                   $message = '',
         string                   $debugMessage = '',
         int                      $statusCode = 200
