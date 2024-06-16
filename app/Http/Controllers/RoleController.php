@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest;
+use App\Http\Resources\ProjectResource;
 use App\Http\Resources\RoleResource;
+use App\Http\Resources\UserResource;
+use App\Http\Response\Response;
+use App\Models\Project;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class RoleController extends Controller
@@ -15,30 +20,58 @@ class RoleController extends Controller
     {
         $this->authorize('viewAny', Role::class);
 
-        return RoleResource::collection(Role::all());
+        return Response::successResponse(
+            RoleResource::collection(Role::all()),
+            __('crud.read', [
+                'item' => __('role.item')
+            ])
+        );
     }
 
     public function store(RoleRequest $request)
     {
         $this->authorize('create', Role::class);
 
-        return new RoleResource(Role::create($request->validated()));
+        $data = $request->validated();
+        $data['policies'] = json_encode($data['policies']);
+
+        return Response::successResponse(new RoleResource(Role::create($data)),
+            __('crud.create', [
+                'item' => __('role.item')
+            ]));
     }
 
     public function show(Role $role)
     {
         $this->authorize('view', $role);
 
-        return new RoleResource($role);
+        return Response::successResponse(
+            new RoleResource($role),
+            __('crud.read', [
+                'item' => __('role.item_with_name', [
+                    'name' => $role->name
+                ])
+            ])
+        );
     }
 
     public function update(RoleRequest $request, Role $role)
     {
         $this->authorize('update', $role);
 
-        $role->update($request->validated());
+        $data = $request->validated();
+        $data['policies'] = json_encode($data['policies']);
 
-        return new RoleResource($role);
+        $role->update($data);
+
+        return Response::successResponse(
+            new ProjectResource($role),
+            __('crud.update', [
+                'item' => __('role.item_with_name', [
+                    'name' => $role->name
+                ])
+            ])
+        );
     }
 
     public function destroy(Role $role)
@@ -47,6 +80,12 @@ class RoleController extends Controller
 
         $role->delete();
 
-        return response()->json();
+        return Response::successResponse(
+            message: __('crud.delete', [
+                'item' => __('role.item_with_name', [
+                    'name' => $role->name
+                ])
+            ])
+        );
     }
 }

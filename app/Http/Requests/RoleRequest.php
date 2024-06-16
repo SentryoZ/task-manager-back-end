@@ -11,7 +11,7 @@ class RoleRequest extends FormRequest
         return [
             'name' => ['required'],
             'description' => ['nullable'],
-            'policies' => ['required', 'json']
+            'policies' => ['required', 'array']
         ];
     }
 
