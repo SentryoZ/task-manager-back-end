@@ -19,7 +19,7 @@ class UserController extends Controller
         $this->authorize('viewAny', User::class);
 
         return Response::successResponse(
-            UserResource::collection(User::all()),
+            UserResource::collection(User::orderBy('updated_at')->all()),
             __('crud.read', [
                 'item' => __('user.item')
             ])

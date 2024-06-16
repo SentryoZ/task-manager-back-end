@@ -16,7 +16,7 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         return Response::successResponse(
-            ProjectResource::collection(Project::all()),
+            ProjectResource::collection(Project::orderBy('updated_at')->all()),
             __('crud.read', [
                 'item' => __('project.item')
             ])

@@ -21,7 +21,7 @@ class RoleController extends Controller
         $this->authorize('viewAny', Role::class);
 
         return Response::successResponse(
-            RoleResource::collection(Role::all()),
+            RoleResource::collection(Role::orderBy('updated_at')->all()),
             __('crud.read', [
                 'item' => __('role.item')
             ])
