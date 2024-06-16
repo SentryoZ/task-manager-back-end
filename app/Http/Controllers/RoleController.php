@@ -32,10 +32,7 @@ class RoleController extends Controller
     {
         $this->authorize('create', Role::class);
 
-        $data = $request->validated();
-        $data['policies'] = json_encode($data['policies']);
-
-        return Response::successResponse(new RoleResource(Role::create($data)),
+        return Response::successResponse(new RoleResource(Role::create($request->validated())),
             __('crud.create', [
                 'item' => __('role.item')
             ]));
@@ -59,13 +56,10 @@ class RoleController extends Controller
     {
         $this->authorize('update', $role);
 
-        $data = $request->validated();
-        $data['policies'] = json_encode($data['policies']);
-
-        $role->update($data);
+        $role->update($request->validated());
 
         return Response::successResponse(
-            new ProjectResource($role),
+            new RoleResource($role),
             __('crud.update', [
                 'item' => __('role.item_with_name', [
                     'name' => $role->name

@@ -15,4 +15,10 @@ class Role extends Model
         'description',
         'policies',
     ];
+    protected function casts(): array
+    {
+        return [
+            'policies' => 'array',
+        ];
+    }
 }
