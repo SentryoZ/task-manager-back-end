@@ -7,7 +7,9 @@ use App\Http\Resources\UserResource;
 use App\Http\Response\Response;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -29,15 +31,15 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $this->authorize('create', User::class);
-
         $data = $request->validated();
+        $data = $this->handleAvatar($data);
         $password = Str::password('16');
         $data['password'] = $password;
 
         //TODO: Send mail
-        Log::info("Create {$data['email']} with password {$password}" );
+        Log::info("Create {$data['email']} with password {$password}");
 
-        return Response::successResponse(new UserResource(User::create($data)),
+        return Response::successResponse(new UserResource(User::query()->create($data)),
             __('crud.create', [
                 'item' => __('user.item')
             ]));
@@ -61,7 +63,10 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
-        $user->update($request->validated());
+        $data = $request->validated();
+        $data = $this->handleAvatar($data, $user);
+
+        $user->update($data);
 
         return Response::successResponse(
             new UserResource($user),
@@ -86,5 +91,23 @@ class UserController extends Controller
                 ])
             ])
         );
+    }
+
+    private function handleAvatar(array $data, User $user = null)
+    {
+        if (isset($data['avatar'])) {
+            if (!is_null($user) && !is_null($user->avatar)) {
+                Storage::delete("/avatar/$user->avatar}");
+            }
+            $file = request()->file('avatar');
+            $path = "avatar/" . md5(Str::random()) . "." . $file->getClientOriginalExtension();
+            Storage::disk('public')->put(
+                $path,
+                $file->getContent()
+            );
+            $data['avatar'] = $path;
+        }
+
+        return $data;
     }
 }
