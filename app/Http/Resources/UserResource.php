@@ -19,9 +19,9 @@ class UserResource extends JsonResource
             'email' => $this->description,
             'status' => __(Arr::get(User::STATUSES, $this->status)),
             'status_label' => $this->status,
-            'role' => $this->role->id,
-            'role_name' => $this->role->name,
-            'avatar' => asset(Storage::url($this->avatar)),
+            'role' => is_null($this->role) ? 0 : $this->role->id,
+            'role_name' => is_null($this->role) ? __('role.no_role') : $this->role->name,
+            'avatar' => is_null($this->avatar) ? null : asset(Storage::url($this->avatar)),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -5,5 +5,6 @@ return [
     'status' => [
         'open' => 'Open',
         'close' => 'Close',
-    ]
+    ],
+    'no_role' => "No role"
 ];
