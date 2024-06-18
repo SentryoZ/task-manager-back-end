@@ -16,7 +16,7 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->description,
+            'email' => $this->email,
             'status' => __(Arr::get(User::STATUSES, $this->status)),
             'status_label' => $this->status,
             'role' => is_null($this->role) ? 0 : $this->role->id,
