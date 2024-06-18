@@ -9,9 +9,14 @@ class UserRequest extends FormRequest
 {
     public function rules(): array
     {
+        $uniqueRule = Rule::unique('users');
+        if (!is_null($this->route()->user)) {
+            $uniqueRule->ignore($this->route()->user->id);
+        }
+
         return [
             'name' => ['required'],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($this->route()->user->id)],
+            'email' => ['required', 'email', $uniqueRule],
             'status' => ['required', 'boolean'],
             'role_id' => ['required', 'int'],
             'avatar' => ['file', 'mimes:jpg,png', 'nullable']
