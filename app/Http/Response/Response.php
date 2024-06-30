@@ -2,6 +2,7 @@
 
 namespace App\Http\Response;
 
+use App\Const\HttpConst;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -10,17 +11,12 @@ use Illuminate\Support\Arr;
 
 class Response
 {
-    const SUCCESS = 200;
-    const UNAUTHORIZED = 401;
-    const NOT_FOUND = 404;
-    const UNPROCESSABLE_CONTENT = 422;
-    const SERVER_ERROR = 500;
 
     public static function successResponse(
         $data = [],
         $message = "",
         $debugMessage = "",
-        $statusCode = self::SUCCESS
+        $statusCode = HttpConst::OK
     ): JsonResponse
     {
         return self::response(
@@ -44,7 +40,7 @@ class Response
         array|string|null        $errors = null,
         string                   $message = '',
         string                   $debugMessage = '',
-        int                      $statusCode = 200
+        int                      $statusCode = HttpConst::OK
     ): JsonResponse
     {
         if ($data instanceof ResourceCollection) {
@@ -69,7 +65,7 @@ class Response
         $data = [],
         $message = "",
         $debugMessage = "",
-        $statusCode = self::NOT_FOUND
+        $statusCode = HttpConst::NOT_FOUND
     ): JsonResponse
     {
         return self::response(
@@ -84,7 +80,7 @@ class Response
         $data = [],
         $message = "",
         $debugMessage = "",
-        $statusCode = self::UNAUTHORIZED
+        $statusCode = HttpConst::UNAUTHORIZED
     ): JsonResponse
     {
         return self::response(
@@ -100,7 +96,7 @@ class Response
         $errors = [],
         $message = "",
         $debugMessage = "",
-        $statusCode = self::SERVER_ERROR
+        $statusCode = HttpConst::INTERNAL_SERVER_ERROR
     ): JsonResponse
     {
         return self::response(
@@ -117,7 +113,7 @@ class Response
         $errors = null,
         $message = "",
         $debugMessage = "",
-        $statusCode = self::UNPROCESSABLE_CONTENT
+        $statusCode = HttpConst::UNPROCESSABLE_CONTENT
     ): JsonResponse
     {
         return self::response(
