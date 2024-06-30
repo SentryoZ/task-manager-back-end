@@ -30,7 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             );
         });
         $exceptions->render(function (AccessDeniedHttpException $exception){
-            return Response::unauthorizedResponse(message: $exception->getMessage(),statusCode: HttpConst::UNPROCESSABLE_CONTENT);
+            return Response::unauthorizedResponse(message: $exception->getMessage(),statusCode: HttpConst::FORBIDDEN);
         });
         $exceptions->render(function (Exception $exception) {
             return Response::serverErrorResponse(message: "Server Error", debugMessage: $exception->getMessage());
