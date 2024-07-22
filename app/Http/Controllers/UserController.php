@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserUpdatePasswordRequest;
+use App\Http\Requests\UserUpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Response\Response;
 use App\Models\User;
+use Exception;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -109,5 +114,41 @@ class UserController extends Controller
         }
 
         return $data;
+    }
+
+    public function updatePassword(UserUpdatePasswordRequest $request)
+    {
+        $user = Auth::user();
+
+        $user->password = Hash::make($request->get('new_password'));
+        $user->save();
+        $user->tokens()->delete();
+
+        return Response::successResponse(
+            new UserResource($user),
+            __('crud.update', [
+                'item' => __('user.item_with_name', [
+                    'name' => $user->name
+                ])
+            ])
+        );
+    }
+
+    public function updateProfile(UserUpdateProfileRequest $request)
+    {
+        $user = Auth::user();
+        $data = $request->validated();
+        $data = $this->handleAvatar($data, $user);
+
+        $user->update($data);
+
+        return Response::successResponse(
+            new UserResource($user),
+            __('crud.update', [
+                'item' => __('user.item_with_name', [
+                    'name' => $user->name
+                ])
+            ])
+        );
     }
 }

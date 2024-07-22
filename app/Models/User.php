@@ -3,12 +3,25 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property !Carbon $email_verified_at
+ * @property string $password
+ * @property !string $remember_token
+ * @property !Carbon $created_at
+ * @property !Carbon $updated_at
+ * @property !Role $role
+ */
 
 class User extends Authenticatable
 {

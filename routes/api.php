@@ -22,6 +22,11 @@ Route::group([
         return $request->user();
     });
 
+    Route::group(['prefix' => 'profile'], function () {
+        Route::post('/update-profile', [UserController::class, 'updateProfile']);
+        Route::post('/update-password', [UserController::class, 'updatePassword']);
+    });
+
     Route::apiResource('project', ProjectController::class);
     Route::apiResource('user', UserController::class);
     Route::apiResource('role', RoleController::class);
