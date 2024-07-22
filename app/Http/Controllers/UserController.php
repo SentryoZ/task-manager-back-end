@@ -50,6 +50,24 @@ class UserController extends Controller
             ]));
     }
 
+    private function handleAvatar(array $data, User $user = null)
+    {
+        if (isset($data['avatar'])) {
+            if (!is_null($user) && !is_null($user->avatar)) {
+                Storage::delete("/avatar/$user->avatar}");
+            }
+            $file = request()->file('avatar');
+            $path = "avatar/" . md5(Str::random()) . "." . $file->getClientOriginalExtension();
+            Storage::disk('public')->put(
+                $path,
+                $file->getContent()
+            );
+            $data['avatar'] = $path;
+        }
+
+        return $data;
+    }
+
     public function show(User $user)
     {
         $this->authorize('view', $user);
@@ -57,25 +75,6 @@ class UserController extends Controller
         return Response::successResponse(
             new UserResource($user),
             __('crud.read', [
-                'item' => __('user.item_with_name', [
-                    'name' => $user->name
-                ])
-            ])
-        );
-    }
-
-    public function update(UserRequest $request, User $user)
-    {
-        $this->authorize('update', $user);
-
-        $data = $request->validated();
-        $data = $this->handleAvatar($data, $user);
-
-        $user->update($data);
-
-        return Response::successResponse(
-            new UserResource($user),
-            __('crud.update', [
                 'item' => __('user.item_with_name', [
                     'name' => $user->name
                 ])
@@ -98,31 +97,15 @@ class UserController extends Controller
         );
     }
 
-    private function handleAvatar(array $data, User $user = null)
-    {
-        if (isset($data['avatar'])) {
-            if (!is_null($user) && !is_null($user->avatar)) {
-                Storage::delete("/avatar/$user->avatar}");
-            }
-            $file = request()->file('avatar');
-            $path = "avatar/" . md5(Str::random()) . "." . $file->getClientOriginalExtension();
-            Storage::disk('public')->put(
-                $path,
-                $file->getContent()
-            );
-            $data['avatar'] = $path;
-        }
-
-        return $data;
-    }
-
     public function updatePassword(UserUpdatePasswordRequest $request)
     {
         $user = Auth::user();
 
         $user->password = Hash::make($request->get('new_password'));
         $user->save();
-        $user->tokens()->delete();
+        if ($request->get('force_logout')) {
+            $user->tokens()->delete();
+        }
 
         return Response::successResponse(
             new UserResource($user),
@@ -137,6 +120,25 @@ class UserController extends Controller
     public function updateProfile(UserUpdateProfileRequest $request)
     {
         $user = Auth::user();
+        $data = $request->validated();
+        $data = $this->handleAvatar($data, $user);
+
+        $user->update($data);
+
+        return Response::successResponse(
+            new UserResource($user),
+            __('crud.update', [
+                'item' => __('user.item_with_name', [
+                    'name' => $user->name
+                ])
+            ])
+        );
+    }
+
+    public function update(UserRequest $request, User $user)
+    {
+        $this->authorize('update', $user);
+
         $data = $request->validated();
         $data = $this->handleAvatar($data, $user);
 

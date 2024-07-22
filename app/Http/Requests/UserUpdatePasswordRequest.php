@@ -13,6 +13,7 @@ class UserUpdatePasswordRequest extends FormRequest
             'old_password' => ['required', 'current_password'],
             'new_password' => ['required', 'min:8', 'confirmed'],
             'new_password_confirmation' => ['required', 'min:8'],
+            'force_logout' => ['required', 'boolean'],
         ];
     }
 
