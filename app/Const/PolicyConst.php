@@ -15,12 +15,16 @@ class PolicyConst
     const PROJECT_READ = 'project.read';
     const PROJECT_UPDATE = 'project.update';
     const PROJECT_DELETE = 'project.delete';
-    const PROJECT_ASSIGN = 'project.assign';
-    const PROJECT_MANAGE = 'project.manage';
 
     // Role constants
     const ROLE_CREATE = 'role.create';
     const ROLE_READ = 'role.read';
     const ROLE_UPDATE = 'role.update';
     const ROLE_DELETE = 'role.delete';
+
+    // Task constants
+    const TASK_CREATE = 'task.create';
+    const TASK_READ = 'task.read';
+    const TASK_UPDATE = 'task.update';
+    const TASK_DELETE = 'task.delete';
 }
