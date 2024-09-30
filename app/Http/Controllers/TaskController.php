@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Const\PolicyConst;
+use App\Helper\PolicyHelper;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\TaskResource;
@@ -15,10 +17,20 @@ class TaskController extends Controller
 
     public function index()
     {
-        $this->authorize('viewAny', Task::class);
+        $user = request()->user();
+        $canReadAny = PolicyHelper::checkPolicies($user, PolicyConst::TASK_READ);
+
+        $tasks = Task::query()->orderBy('start_time');
+
+        if (!$canReadAny) {
+            $tasks->where('user_id', '=', $user->id)
+                ->orWhere('assigned_user_id', '=', $user->id);
+        }
+
+        $tasks->get();
 
         return Response::successResponse(
-            TaskResource::collection(Task::query()->orderBy('start_time')->get()),
+            TaskResource::collection($tasks),
             __('crud.read', [
                 'item' => __('task.item')
             ])
