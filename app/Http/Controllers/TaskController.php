@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Const\PolicyConst;
 use App\Helper\PolicyHelper;
 use App\Http\Requests\TaskRequest;
-use App\Http\Resources\RoleResource;
 use App\Http\Resources\TaskResource;
 use App\Http\Response\Response;
 use App\Models\Task;
@@ -27,10 +26,8 @@ class TaskController extends Controller
                 ->orWhere('assigned_user_id', '=', $user->id);
         }
 
-        $tasks->get();
-
         return Response::successResponse(
-            TaskResource::collection($tasks),
+            TaskResource::collection($tasks->get()),
             __('crud.read', [
                 'item' => __('task.item')
             ])

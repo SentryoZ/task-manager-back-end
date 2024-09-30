@@ -33,6 +33,6 @@ return Application::configure(basePath: dirname(__DIR__))
             return Response::unauthorizedResponse(message: $exception->getMessage(),statusCode: HttpConst::FORBIDDEN);
         });
         $exceptions->render(function (Exception $exception) {
-            return Response::serverErrorResponse(message: "Server Error", debugMessage: $exception->getMessage());
+            return Response::serverErrorResponse(errors: $exception->getTrace(), message: "Server Error", debugMessage: $exception->getMessage());
         });
     })->create();
