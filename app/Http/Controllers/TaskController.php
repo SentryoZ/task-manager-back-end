@@ -27,7 +27,7 @@ class TaskController extends Controller
         }
 
         return Response::successResponse(
-            TaskResource::collection($tasks->get()),
+            TaskResource::collection($tasks->get()->load('user', 'assignedUser', 'project')),
             __('crud.read', [
                 'item' => __('task.item')
             ])
